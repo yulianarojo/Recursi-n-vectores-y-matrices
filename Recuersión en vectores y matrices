@@ -1,0 +1,998 @@
+
+// · VECTORES RECURSIVOS (01 - 25)
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAX = 100;
+
+// Función auxiliar: mostrar el vector con formato [a, b, c]
+void mostrarLista(int v[], int n, int i = 0){
+    if(i == n) return;                      // CASO BASE
+    cout << v[i];
+    if(i < n - 1) cout << ", ";             // coma entre elementos
+    mostrarLista(v, n, i + 1);              // AVANZA
+}
+
+void mostrarCorchetes(int v[], int n){
+    cout << "[";
+    mostrarLista(v, n);
+    cout << "]";
+}
+
+// Auxiliar: mostrar el rango v[ini..fin] con formato [a, b, c]
+void mostrarRango(int v[], int ini, int fin){
+    if(ini > fin) return;                   // CASO BASE
+    cout << v[ini];
+    if(ini < fin) cout << ", ";
+    mostrarRango(v, ini + 1, fin);          // AVANZA
+}
+
+// 01) Cargar un vector
+/*
+ Si i==n ya cargamos todo (caso base).
+ Si no, leemos v[i] y llamamos con i+1.
+*/
+void cargar(int v[], int n, int i = 0){
+    if(i == n) return;                      // CASO BASE
+    cin >> v[i];                            // trabajo actual
+    cargar(v, n, i + 1);                    // PROGRESO
+}
+
+// 02) Mostrar un vector (del primero al último)
+void mostrar(int v[], int n, int i = 0){
+    if(i == n) return;                      // CASO BASE
+    cout << v[i] << " ";                    // imprime ANTES de llamar
+    mostrar(v, n, i + 1);                   // AVANZA
+}
+
+// 03) Mostrar en orden inverso (sin modificar el array)
+/*
+ Imprimimos DESPUÉS de la llamada: al desapilar
+ salen del último al primero.
+*/
+void mostrarInverso(int v[], int n, int i = 0){
+    if(i == n) return;                      // CASO BASE
+    mostrarInverso(v, n, i + 1);            // primero baja hasta el final
+    cout << v[i] << " ";                    // imprime al volver
+}
+
+// 04) Sumar elementos
+/*
+ suma(i) = v[i] + suma(i+1), con suma(n) = 0
+*/
+int suma(int v[], int n, int i = 0){
+    if(i == n) return 0;                    // CASO BASE
+    return v[i] + suma(v, n, i + 1);        // SUMA Y AVANZA
+}
+
+// 05) Contar números pares
+int contarPares(int v[], int n, int i = 0){
+    if(i == n) return 0;                    // CASO BASE
+    return (v[i] % 2 == 0) + contarPares(v, n, i + 1);  // 1 si es par
+}
+
+// 06) Contar positivos, negativos y ceros
+/*
+ Los contadores se pasan por referencia y se van
+ incrementando en cada llamada.
+*/
+void contarSignos(int v[], int n, int &pos, int &neg, int &ceros, int i = 0){
+    if(i == n) return;                      // CASO BASE
+    if(v[i] > 0) pos++;
+    else if(v[i] < 0) neg++;
+    else ceros++;
+    contarSignos(v, n, pos, neg, ceros, i + 1);  // AVANZA
+}
+
+// 07) Calcular el promedio (N > 0) usando la suma recursiva (ej. 04)
+double promedio(int v[], int n){
+    return (double)suma(v, n) / n;
+}
+
+// 08) Contar múltiplos de K (K != 0)
+int contarMultiplos(int v[], int n, int k, int i = 0){
+    if(i == n) return 0;                    // CASO BASE
+    return (v[i] % k == 0) + contarMultiplos(v, n, k, i + 1);
+}
+
+
+// 09) Encontrar el mayor (N > 0, sin variables globales)
+/*
+ Compara la cabeza con el máximo del resto.
+ Base: el último elemento es el máximo de sí mismo.
+*/
+int mayor(int v[], int n, int i = 0){
+    if(i == n - 1) return v[i];             // CASO BASE: último
+    int m = mayor(v, n, i + 1);             // máximo de la "cola"
+    return max(v[i], m);                    // COMBINA
+}
+
+// 10) Encontrar el menor y su posición (primera aparición)
+/*
+ Devuelve la POSICIÓN del menor desde i hasta el final.
+ Usamos <= para quedarnos con la primera aparición.
+*/
+int posMenor(int v[], int n, int i = 0){
+    if(i == n - 1) return i;                // CASO BASE
+    int p = posMenor(v, n, i + 1);          // posición del menor del resto
+    if(v[i] <= v[p]) return i;              // COMBINA (empate → el de la izquierda)
+    return p;
+}
+
+// 11) Buscar un elemento (primera posición o -1)
+int buscar(int v[], int n, int x, int i = 0){
+    if(i == n) return -1;                   // CASO BASE: no se encontró
+    if(v[i] == x) return i;                 // encontrado: cortamos aquí
+    return buscar(v, n, x, i + 1);          // AVANZA
+}
+
+// 12) Contar repeticiones de X
+int contarX(int v[], int n, int x, int i = 0){
+    if(i == n) return 0;                    // CASO BASE
+    return (v[i] == x) + contarX(v, n, x, i + 1);
+}
+
+// 13) Reemplazar todas las apariciones de X por Y
+void reemplazar(int v[], int n, int x, int y, int i = 0){
+    if(i == n) return;                      // CASO BASE
+    if(v[i] == x) v[i] = y;                 // trabajo local
+    reemplazar(v, n, x, y, i + 1);          // AVANZA
+}
+
+// 14) Invertir el vector en el mismo espacio (dos punteros)
+void invertir(int v[], int l, int r){
+    if(l >= r) return;                      // CASO BASE: punteros se cruzan
+    swap(v[l], v[r]);                       // intercambio local
+    invertir(v, l + 1, r - 1);              // REDUCCIÓN
+}
+
+// 15) Verificar orden ascendente (permite empates)
+bool estaOrdenado(int v[], int n, int i = 0){
+    if(i >= n - 1) return true;             // CASO BASE: 0 o 1 elemento restante
+    if(v[i] > v[i + 1]) return false;       // FALLO TEMPRANO
+    return estaOrdenado(v, n, i + 1);       // AVANZA
+}
+
+// 16) Sumar posiciones pares e impares
+/*
+ Avanzamos de 2 en 2: empezando en 0 sumamos índices pares,
+ empezando en 1 sumamos índices impares.
+*/
+int sumaSaltando(int v[], int n, int i){
+    if(i >= n) return 0;                    // CASO BASE
+    return v[i] + sumaSaltando(v, n, i + 2);// SALTA 2 POSICIONES
+}
+
+// 17) Eliminar un elemento por posición P
+/*
+ Desplazamos a la izquierda desde P: v[i] = v[i+1].
+ Al final el tamaño lógico disminuye en 1.
+*/
+void desplazarIzquierda(int v[], int n, int i){
+    if(i >= n - 1) return;                  // CASO BASE: último elemento
+    v[i] = v[i + 1];                        // mueve el siguiente a la izquierda
+    desplazarIzquierda(v, n, i + 1);        // AVANZA
+}
+
+void eliminarPos(int v[], int &n, int p){
+    if(p < 0 || p >= n) return;             // posición inválida
+    desplazarIzquierda(v, n, p);
+    n--;                                    // tamaño lógico
+}
+
+// 18) Ordenamiento por selección recursivo
+/*
+ En cada paso buscamos (recursivamente, ej. 10) el menor
+ desde i, lo ponemos en v[i] y ordenamos el resto.
+*/
+void ordenarSeleccion(int v[], int n, int i = 0){
+    if(i >= n - 1) return;                  // CASO BASE: queda 1 elemento
+    int p = posMenor(v, n, i);              // mínimo recursivo del resto
+    swap(v[i], v[p]);                       // lo coloca en su lugar
+    ordenarSeleccion(v, n, i + 1);          // REDUCCIÓN
+}
+
+// 19) Búsqueda binaria recursiva (vector ordenado)
+/*
+ Divide y vencerás: miramos el medio y descartamos la mitad.
+*/
+int busquedaBinaria(int v[], int l, int r, int x){
+    if(l > r) return -1;                    // CASO BASE: no está
+    int m = (l + r) / 2;
+    if(v[m] == x) return m;                 // encontrado
+    if(x < v[m]) return busquedaBinaria(v, l, m - 1, x);  // mitad izquierda
+    return busquedaBinaria(v, m + 1, r, x);               // mitad derecha
+}
+
+// 20) Eliminar elementos duplicados (conserva la primera aparición)
+/*
+ existe: ¿x ya está en v[0..k-1]?
+ compactar: k es el nuevo tamaño lógico; si v[i] no estaba,
+            lo copiamos a v[k] y k crece.
+*/
+bool existe(int v[], int k, int x, int j = 0){
+    if(j == k) return false;                // CASO BASE
+    return v[j] == x || existe(v, k, x, j + 1);   // CORTOCIRCUITO
+}
+
+void compactar(int v[], int n, int &k, int i = 0){
+    if(i == n) return;                      // CASO BASE
+    if(!existe(v, k, v[i])){                // primera aparición
+        v[k] = v[i];
+        k++;
+    }
+    compactar(v, n, k, i + 1);              // AVANZA
+}
+
+void eliminarDuplicados(int v[], int &n){
+    int k = 0;
+    compactar(v, n, k);
+    n = k;
+}
+
+// 21) Separar pares e impares (pares primero) con intercambios
+/*
+ Dos punteros: l busca un impar desde la izquierda,
+ r busca un par desde la derecha; cuando ambos lo
+ encuentran, se intercambian.
+*/
+void separarParesImpares(int v[], int l, int r){
+    if(l >= r) return;                              // CASO BASE
+    if(v[l] % 2 == 0) separarParesImpares(v, l + 1, r);       // ya está bien
+    else if(v[r] % 2 != 0) separarParesImpares(v, l, r - 1);  // ya está bien
+    else{
+        swap(v[l], v[r]);                           // impar ↔ par
+        separarParesImpares(v, l + 1, r - 1);
+    }
+}
+
+// 22) Rotación circular K posiciones a la derecha (sin auxiliar)
+/*
+ Truco de las 3 inversiones (usa invertir del ej. 14):
+ 1) invertir todo  2) invertir los primeros K  3) invertir el resto
+*/
+void rotarDerecha(int v[], int n, int k){
+    k = k % n;                              // K mayor que N da vueltas completas
+    if(k == 0) return;
+    invertir(v, 0, n - 1);
+    invertir(v, 0, k - 1);
+    invertir(v, k, n - 1);
+}
+
+// 23) Subsecuencia contigua estrictamente creciente más larga
+/*
+ Llevamos el tramo actual (longitud e inicio) y el mejor.
+ Si v[i] > v[i-1] el tramo crece; si no, empieza uno nuevo en i.
+*/
+int masLargaCreciente(int v[], int n, int i, int actual, int iniActual,
+                      int mejor, int &iniMejor){
+    if(i == n) return mejor;                        // CASO BASE
+    if(v[i] > v[i - 1]) actual++;                   // sigue creciendo
+    else{ actual = 1; iniActual = i; }              // se corta: nuevo tramo
+    if(actual > mejor){ mejor = actual; iniMejor = iniActual; }
+    return masLargaCreciente(v, n, i + 1, actual, iniActual, mejor, iniMejor);
+}
+
+// 24) Segundo mayor distinto
+/*
+ Devuelve el mayor valor que sea MENOR que el máximo.
+ INT_MIN significa "no existe".
+*/
+int segundoMayor(int v[], int n, int maximo, int i = 0){
+    if(i == n) return INT_MIN;                      // CASO BASE
+    int resto = segundoMayor(v, n, maximo, i + 1);  // candidato del resto
+    if(v[i] < maximo && v[i] > resto) return v[i];  // COMBINA
+    return resto;
+}
+
+// 25) Máxima suma de segmento consecutivo (Kadane recursivo)
+/*
+ actual = mejor suma de un segmento que TERMINA en i.
+ Si conviene empezar de nuevo en v[i], lo hacemos.
+*/
+int sumaMaxima(int v[], int n, int i, int actual, int iniActual,
+               int mejor, int &ini, int &fin){
+    if(i == n) return mejor;                        // CASO BASE
+    if(actual + v[i] < v[i]){ actual = v[i]; iniActual = i; }  // reinicia
+    else actual += v[i];                                        // extiende
+    if(actual > mejor){ mejor = actual; ini = iniActual; fin = i; }
+    return sumaMaxima(v, n, i + 1, actual, iniActual, mejor, ini, fin);
+}
+
+//  PRUEBAS 
+void ej01(){
+    cout << "\n=== 01. Cargar un vector ===\n";
+    int v[MAX], n;
+    cout << "N = "; cin >> n;
+    cout << "Ingrese " << n << " numeros: ";
+    cargar(v, n);
+    cout << "Vector cargado: "; mostrarCorchetes(v, n); cout << "\n";
+}
+void ej02(){
+    cout << "\n=== 02. Mostrar un vector ===\n";
+    int v[MAX] = {4, 7, 1, 9, 2}, n = 5;
+    mostrar(v, n); cout << "\n";
+}
+void ej03(){
+    cout << "\n=== 03. Mostrar en orden inverso ===\n";
+    int v[MAX] = {10, 20, 30, 40, 50}, n = 5;
+    mostrarInverso(v, n); cout << "\n";
+}
+void ej04(){
+    cout << "\n=== 04. Sumar elementos ===\n";
+    int v[MAX] = {2, 4, 6, 8, 10}, n = 5;
+    cout << "Suma total: " << suma(v, n) << "\n";
+}
+void ej05(){
+    cout << "\n=== 05. Contar pares ===\n";
+    int v[MAX] = {3, 8, 10, 7, 2, 5, 6}, n = 7;
+    cout << "Cantidad de pares: " << contarPares(v, n) << "\n";
+}
+void ej06(){
+    cout << "\n=== 06. Positivos, negativos y ceros ===\n";
+    int v[MAX] = {-2, 0, 5, -7, 3, 0, 1}, n = 7;
+    int pos = 0, neg = 0, ceros = 0;
+    contarSignos(v, n, pos, neg, ceros);
+    cout << "Positivos: " << pos << "; negativos: " << neg << "; ceros: " << ceros << "\n";
+}
+void ej07(){
+    cout << "\n=== 07. Promedio ===\n";
+    int v[MAX] = {12, 14, 16, 18}, n = 4;
+    cout << fixed << setprecision(2) << "Promedio: " << promedio(v, n) << "\n";
+}
+void ej08(){
+    cout << "\n=== 08. Multiplos de K ===\n";
+    int v[MAX] = {6, 10, 12, 15, 18, 21}, n = 6, k = 3;
+    cout << "Multiplos de " << k << ": " << contarMultiplos(v, n, k) << "\n";
+}
+void ej09(){
+    cout << "\n=== 09. Mayor ===\n";
+    int v[MAX] = {-8, -2, -11, -5, -3}, n = 5;
+    cout << "Mayor: " << mayor(v, n) << "\n";
+}
+void ej10(){
+    cout << "\n=== 10. Menor y su posicion ===\n";
+    int v[MAX] = {8, 3, 6, 3, 9, 4}, n = 6;
+    int p = posMenor(v, n);
+    cout << "Menor: " << v[p] << "; indice: " << p << "\n";
+}
+void ej11(){
+    cout << "\n=== 11. Buscar un elemento ===\n";
+    int v[MAX] = {2, 9, 4, 9, 7, 1}, n = 6, x = 9;
+    cout << "Primera posicion: " << buscar(v, n, x) << "\n";
+}
+void ej12(){
+    cout << "\n=== 12. Contar repeticiones ===\n";
+    int v[MAX] = {3, 5, 3, 1, 3, 8, 5, 3}, n = 8, x = 3;
+    cout << "Apariciones: " << contarX(v, n, x) << "\n";
+}
+void ej13(){
+    cout << "\n=== 13. Reemplazar elementos ===\n";
+    int v[MAX] = {4, 2, 4, 7, 4, 1}, n = 6, x = 4, y = 0;
+    reemplazar(v, n, x, y);
+    cout << "Vector final: "; mostrarCorchetes(v, n); cout << "\n";
+}
+void ej14(){
+    cout << "\n=== 14. Invertir el vector ===\n";
+    int v[MAX] = {1, 2, 3, 4, 5}, n = 5;
+    invertir(v, 0, n - 1);
+    cout << "Vector invertido: "; mostrarCorchetes(v, n); cout << "\n";
+}
+void ej15(){
+    cout << "\n=== 15. Verificar orden ascendente ===\n";
+    int v[MAX] = {1, 2, 2, 5, 8, 8}, n = 6;
+    cout << "Esta ordenado?: " << (estaOrdenado(v, n) ? "Si" : "No") << "\n";
+}
+void ej16(){
+    cout << "\n=== 16. Sumar posiciones pares e impares ===\n";
+    int v[MAX] = {10, 3, 20, 4, 30, 5}, n = 6;
+    cout << "Suma indices pares: " << sumaSaltando(v, n, 0)
+         << "; suma indices impares: " << sumaSaltando(v, n, 1) << "\n";
+}
+void ej17(){
+    cout << "\n=== 17. Eliminar por posicion ===\n";
+    int v[MAX] = {7, 2, 9, 4, 6}, n = 5, p = 2;
+    eliminarPos(v, n, p);
+    cout << "N nuevo: " << n << "; vector logico: "; mostrarCorchetes(v, n); cout << "\n";
+}
+void ej18(){
+    cout << "\n=== 18. Seleccion recursiva ===\n";
+    int v[MAX] = {8, 1, 6, 3, 2, 5}, n = 6;
+    ordenarSeleccion(v, n);
+    cout << "Vector ordenado: "; mostrarCorchetes(v, n); cout << "\n";
+}
+void ej19(){
+    cout << "\n=== 19. Busqueda binaria ===\n";
+    int v[MAX] = {2, 4, 6, 8, 10, 12, 14}, n = 7, x = 10;
+    cout << "Indice encontrado: " << busquedaBinaria(v, 0, n - 1, x) << "\n";
+}
+void ej20(){
+    cout << "\n=== 20. Eliminar duplicados ===\n";
+    int v[MAX] = {4, 7, 4, 2, 7, 9, 2, 5}, n = 8;
+    eliminarDuplicados(v, n);
+    cout << "N nuevo: " << n << "; vector logico: "; mostrarCorchetes(v, n); cout << "\n";
+}
+void ej21(){
+    cout << "\n=== 21. Separar pares e impares ===\n";
+    int v[MAX] = {1, 2, 3, 4, 5, 6}, n = 6;
+    separarParesImpares(v, 0, n - 1);
+    cout << "Resultado: "; mostrarCorchetes(v, n); cout << "\n";
+}
+void ej22(){
+    cout << "\n=== 22. Rotacion circular ===\n";
+    int v[MAX] = {1, 2, 3, 4, 5}, n = 5, k = 2;
+    rotarDerecha(v, n, k);
+    cout << "Vector rotado: "; mostrarCorchetes(v, n); cout << "\n";
+}
+void ej23(){
+    cout << "\n=== 23. Subsecuencia creciente consecutiva ===\n";
+    int v[MAX] = {2, 4, 7, 1, 3, 5, 6, 2, 4}, n = 9;
+    int ini = 0;
+    int largo = masLargaCreciente(v, n, 1, 1, 0, 1, ini);
+    cout << "Longitud maxima: " << largo << " (segmento [";
+    mostrarRango(v, ini, ini + largo - 1);
+    cout << "])\n";
+}
+void ej24(){
+    cout << "\n=== 24. Segundo mayor distinto ===\n";
+    int v[MAX] = {8, 2, 8, 5, 7, 7, 1}, n = 7;
+    int m = mayor(v, n);
+    int s = segundoMayor(v, n, m);
+    cout << "Mayor: " << m << "; segundo mayor distinto: ";
+    if(s == INT_MIN) cout << "no existe\n";
+    else cout << s << "\n";
+}
+void ej25(){
+    cout << "\n=== 25. Maxima suma de segmento ===\n";
+    int v[MAX] = {-2, 1, -3, 4, -1, 2, 1, -5}, n = 8;
+    int ini = 0, fin = 0;
+    // arrancamos con el primer elemento como segmento inicial
+    int s = sumaMaxima(v, n, 1, v[0], 0, v[0], ini, fin);
+    cout << "Suma maxima: " << s << " (segmento [";
+    mostrarRango(v, ini, fin);
+    cout << "])\n";
+}
+
+int main(){
+    ej01(); ej02(); ej03(); ej04(); ej05();
+    ej06(); ej07(); ej08(); ej09(); ej10();
+    ej11(); ej12(); ej13(); ej14(); ej15();
+    ej16(); ej17(); ej18(); ej19(); ej20();
+    ej21(); ej22(); ej23(); ej24(); ej25();
+    return 0;
+}
+
+
+//  · MATRICES RECURSIVAS (26 - 50)
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXF = 20;
+const int MAXC = 20;
+
+// Función auxiliar: imprimir un valor repetido K veces con formato [x, x, x]
+void mostrarRepetido(int valor, int k){
+    if(k == 0) return;                      // CASO BASE
+    cout << valor;
+    if(k > 1) cout << ", ";
+    mostrarRepetido(valor, k - 1);          // REDUCCIÓN
+}
+
+
+// 26) Cargar una matriz F×C
+void cargar(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    if(i == F) return;                              // CASO BASE: sin filas
+    if(j == C){ cargar(M, F, C, i + 1, 0); return; }// salto de fila
+    cin >> M[i][j];                                 // trabajo actual
+    cargar(M, F, C, i, j + 1);                      // avanza columna
+}
+
+// 27) Mostrar una matriz respetando filas y columnas
+void mostrar(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    if(i == F) return;                              // CASO BASE
+    if(j == C){                                     // fin de la fila
+        cout << "\n";
+        mostrar(M, F, C, i + 1, 0);
+        return;
+    }
+    cout << M[i][j] << " ";
+    mostrar(M, F, C, i, j + 1);                     // avanza columna
+}
+
+// 28) Sumar todos los elementos
+int suma(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    if(i == F) return 0;                            // CASO BASE
+    if(j == C) return suma(M, F, C, i + 1, 0);      // salto de fila
+    return M[i][j] + suma(M, F, C, i, j + 1);       // suma y avanza
+}
+
+// 29) Contar pares e impares (contadores por referencia)
+void contarParImpar(int M[][MAXC], int F, int C, int &pares, int &impares,
+                    int i = 0, int j = 0){
+    if(i == F) return;                              // CASO BASE
+    if(j == C){ contarParImpar(M, F, C, pares, impares, i + 1, 0); return; }
+    if(M[i][j] % 2 == 0) pares++;
+    else impares++;
+    contarParImpar(M, F, C, pares, impares, i, j + 1);
+}
+
+// 30) Encontrar el mayor (matriz no vacía)
+/*
+ Base: la última celda (F-1, C-1) es el mayor de sí misma.
+ Si no: max(celda actual, mayor del resto).
+*/
+int mayor(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    if(j == C) return mayor(M, F, C, i + 1, 0);     // salto de fila
+    if(i == F - 1 && j == C - 1) return M[i][j];    // CASO BASE: última celda
+    return max(M[i][j], mayor(M, F, C, i, j + 1));  // COMBINA
+}
+
+// 31) Encontrar el menor y su primera posición
+/*
+ (fm, cm) guardan la posición del menor visto hasta ahora.
+ Con '<' estricto nos quedamos con la primera aparición.
+*/
+void menor(int M[][MAXC], int F, int C, int &fm, int &cm, int i = 0, int j = 0){
+    if(i == F) return;                              // CASO BASE
+    if(j == C){ menor(M, F, C, fm, cm, i + 1, 0); return; }
+    if(M[i][j] < M[fm][cm]){ fm = i; cm = j; }      // nuevo menor
+    menor(M, F, C, fm, cm, i, j + 1);
+}
+
+// 32) Contar positivos, negativos y ceros
+void contarSignos(int M[][MAXC], int F, int C, int &pos, int &neg, int &ceros,
+                  int i = 0, int j = 0){
+    if(i == F) return;                              // CASO BASE
+    if(j == C){ contarSignos(M, F, C, pos, neg, ceros, i + 1, 0); return; }
+    if(M[i][j] > 0) pos++;
+    else if(M[i][j] < 0) neg++;
+    else ceros++;
+    contarSignos(M, F, C, pos, neg, ceros, i, j + 1);
+}
+
+// 33) Buscar un elemento (primera aparición recorriendo por filas)
+bool buscar(int M[][MAXC], int F, int C, int x, int &f, int &c,
+            int i = 0, int j = 0){
+    if(i == F) return false;                        // CASO BASE: no está
+    if(j == C) return buscar(M, F, C, x, f, c, i + 1, 0);
+    if(M[i][j] == x){ f = i; c = j; return true; }  // encontrado: cortamos
+    return buscar(M, F, C, x, f, c, i, j + 1);
+}
+
+// 34) Sumar cada fila
+int sumaFila(int M[][MAXC], int C, int i, int j = 0){
+    if(j == C) return 0;                            // CASO BASE: fin de la fila
+    return M[i][j] + sumaFila(M, C, i, j + 1);
+}
+
+void mostrarSumasFilas(int M[][MAXC], int F, int C, int i = 0){
+    if(i == F) return;                              // CASO BASE
+    cout << "Fila " << i << ": " << sumaFila(M, C, i) << "\n";
+    mostrarSumasFilas(M, F, C, i + 1);              // siguiente fila
+}
+
+// 35) Sumar cada columna
+int sumaColumna(int M[][MAXC], int F, int j, int i = 0){
+    if(i == F) return 0;                            // CASO BASE: fin de la columna
+    return M[i][j] + sumaColumna(M, F, j, i + 1);
+}
+
+void mostrarSumasColumnas(int M[][MAXC], int F, int C, int j = 0){
+    if(j == C) return;                              // CASO BASE
+    cout << "Columna " << j << ": " << sumaColumna(M, F, j) << "\n";
+    mostrarSumasColumnas(M, F, C, j + 1);           // siguiente columna
+}
+
+// 36) Diagonal principal: M[i][i]
+int diagonalPrincipal(int M[][MAXC], int N, int i = 0){
+    if(i == N) return 0;                            // CASO BASE
+    return M[i][i] + diagonalPrincipal(M, N, i + 1);
+}
+
+// 37) Diagonal secundaria: M[i][N-1-i]
+int diagonalSecundaria(int M[][MAXC], int N, int i = 0){
+    if(i == N) return 0;                            // CASO BASE
+    return M[i][N - 1 - i] + diagonalSecundaria(M, N, i + 1);
+}
+
+// 38) Sumar encima (i<j) y debajo (i>j) de la diagonal principal
+void sumaEncimaDebajo(int M[][MAXC], int N, int &encima, int &debajo,
+                      int i = 0, int j = 0){
+    if(i == N) return;                              // CASO BASE
+    if(j == N){ sumaEncimaDebajo(M, N, encima, debajo, i + 1, 0); return; }
+    if(i < j) encima += M[i][j];
+    else if(i > j) debajo += M[i][j];               // la diagonal no se suma
+    sumaEncimaDebajo(M, N, encima, debajo, i, j + 1);
+}
+
+// 39) Mostrar el borde (en orden por filas)
+/*
+ Una celda es del borde si está en la primera/última fila
+ o en la primera/última columna.
+*/
+bool esBorde(int F, int C, int i, int j){
+    return i == 0 || i == F - 1 || j == 0 || j == C - 1;
+}
+
+void mostrarBorde(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    if(i == F) return;                              // CASO BASE
+    if(j == C){ mostrarBorde(M, F, C, i + 1, 0); return; }
+    if(esBorde(F, C, i, j)) cout << M[i][j] << " ";
+    mostrarBorde(M, F, C, i, j + 1);
+}
+
+// 40) Sumar el borde (cada esquina se visita una sola vez)
+int sumaBorde(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    if(i == F) return 0;                            // CASO BASE
+    if(j == C) return sumaBorde(M, F, C, i + 1, 0);
+    int actual = esBorde(F, C, i, j) ? M[i][j] : 0;
+    return actual + sumaBorde(M, F, C, i, j + 1);
+}
+
+// 41) Mostrar la transpuesta sin crear otra matriz
+/*
+ La transpuesta tiene C filas y F columnas: T[i][j] = M[j][i].
+ Recorremos i en [0, C) y j en [0, F).
+*/
+void mostrarTranspuesta(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    if(i == C) return;                              // CASO BASE
+    if(j == F){
+        cout << "\n";
+        mostrarTranspuesta(M, F, C, i + 1, 0);
+        return;
+    }
+    cout << M[j][i] << " ";
+    mostrarTranspuesta(M, F, C, i, j + 1);
+}
+
+// 42) Mayor de cada fila
+int mayorFila(int M[][MAXC], int C, int i, int j = 0){
+    if(j == C - 1) return M[i][j];                  // CASO BASE: último de la fila
+    return max(M[i][j], mayorFila(M, C, i, j + 1));
+}
+
+void mostrarMayoresFilas(int M[][MAXC], int F, int C, int i = 0){
+    if(i == F) return;                              // CASO BASE
+    cout << "Fila " << i << ": " << mayorFila(M, C, i) << "\n";
+    mostrarMayoresFilas(M, F, C, i + 1);
+}
+
+// 43) Verificar matriz simétrica
+/*
+ Solo revisamos la parte de encima de la diagonal (j > i)
+ y comparamos con su espejo M[j][i].
+*/
+bool esSimetrica(int M[][MAXC], int N, int i = 0, int j = 1){
+    if(i == N) return true;                         // CASO BASE
+    if(j >= N) return esSimetrica(M, N, i + 1, i + 2);  // siguiente fila
+    if(M[i][j] != M[j][i]) return false;            // FALLO TEMPRANO
+    return esSimetrica(M, N, i, j + 1);
+}
+
+// 44) Mostrar la matriz rotada 90° en sentido horario
+/*
+ Rotada[i][j] = M[N-1-j][i]
+*/
+void mostrarRotada90(int M[][MAXC], int N, int i = 0, int j = 0){
+    if(i == N) return;                              // CASO BASE
+    if(j == N){
+        cout << "\n";
+        mostrarRotada90(M, N, i + 1, 0);
+        return;
+    }
+    cout << M[N - 1 - j][i] << " ";
+    mostrarRotada90(M, N, i, j + 1);
+}
+
+// 45) Recorrido en espiral
+/*
+ Por capas: fila de arriba (→), columna derecha (↓),
+ fila de abajo (←), columna izquierda (↑);
+ luego se repite con la capa interior.
+*/
+void filaDerecha(int M[][MAXC], int f, int j, int fin){      // →
+    if(j > fin) return;
+    cout << M[f][j] << " ";
+    filaDerecha(M, f, j + 1, fin);
+}
+void columnaAbajo(int M[][MAXC], int c, int i, int fin){     // ↓
+    if(i > fin) return;
+    cout << M[i][c] << " ";
+    columnaAbajo(M, c, i + 1, fin);
+}
+void filaIzquierda(int M[][MAXC], int f, int j, int fin){    // ←
+    if(j < fin) return;
+    cout << M[f][j] << " ";
+    filaIzquierda(M, f, j - 1, fin);
+}
+void columnaArriba(int M[][MAXC], int c, int i, int fin){    // ↑
+    if(i < fin) return;
+    cout << M[i][c] << " ";
+    columnaArriba(M, c, i - 1, fin);
+}
+
+void espiral(int M[][MAXC], int arriba, int abajo, int izq, int der){
+    if(arriba > abajo || izq > der) return;                  // CASO BASE: sin capa
+    filaDerecha(M, arriba, izq, der);                        // fila superior
+    columnaAbajo(M, der, arriba + 1, abajo);                 // columna derecha
+    if(arriba < abajo) filaIzquierda(M, abajo, der - 1, izq);// fila inferior
+    if(izq < der) columnaArriba(M, izq, abajo - 1, arriba + 1); // columna izquierda
+    espiral(M, arriba + 1, abajo - 1, izq + 1, der - 1);     // capa interior
+}
+
+// 46) Matriz triangular superior (debajo de la diagonal todo es 0)
+/*
+ Revisamos solo las celdas con i > j: fila i, columnas 0..i-1.
+*/
+bool esTriangularSuperior(int M[][MAXC], int N, int i = 1, int j = 0){
+    if(i >= N) return true;                         // CASO BASE
+    if(j == i) return esTriangularSuperior(M, N, i + 1, 0);  // fin de esa parte
+    if(M[i][j] != 0) return false;                  // FALLO TEMPRANO
+    return esTriangularSuperior(M, N, i, j + 1);
+}
+
+// 47) Sumar regiones triangulares (la diagonal va en ambas)
+void sumaTriangulos(int M[][MAXC], int N, int &sup, int &inf, int i = 0, int j = 0){
+    if(i == N) return;                              // CASO BASE
+    if(j == N){ sumaTriangulos(M, N, sup, inf, i + 1, 0); return; }
+    if(i <= j) sup += M[i][j];
+    if(i >= j) inf += M[i][j];
+    sumaTriangulos(M, N, sup, inf, i, j + 1);
+}
+
+// 48) Punto de silla: mínimo de su fila y máximo de su columna
+int minFila(int M[][MAXC], int C, int i, int j = 0){
+    if(j == C - 1) return M[i][j];                  // CASO BASE
+    return min(M[i][j], minFila(M, C, i, j + 1));
+}
+int maxColumna(int M[][MAXC], int F, int j, int i = 0){
+    if(i == F - 1) return M[i][j];                  // CASO BASE
+    return max(M[i][j], maxColumna(M, F, j, i + 1));
+}
+
+void buscarPuntosSilla(int M[][MAXC], int F, int C, int &encontrados,
+                       int i = 0, int j = 0){
+    if(i == F) return;                              // CASO BASE
+    if(j == C){ buscarPuntosSilla(M, F, C, encontrados, i + 1, 0); return; }
+    if(M[i][j] == minFila(M, C, i) && M[i][j] == maxColumna(M, F, j)){
+        cout << "Punto de silla: valor " << M[i][j]
+             << "; fila " << i << "; columna " << j << "\n";
+        encontrados++;
+    }
+    buscarPuntosSilla(M, F, C, encontrados, i, j + 1);
+}
+
+// 49) Buscar K elementos iguales seguidos
+/*
+ Desde (i,j) avanzamos en una dirección (di, dj) y verificamos
+ que las K celdas existan y valgan lo mismo.
+ Direcciones: horizontal →, vertical ↓, diagonal principal ↘,
+              diagonal secundaria ↙.
+*/
+const int DI[4] = {0, 1, 1, 1};
+const int DJ[4] = {1, 0, 1, -1};
+const string NOMBRE[4] = {"horizontal", "vertical",
+                          "diagonal principal", "diagonal secundaria"};
+
+bool secuencia(int M[][MAXC], int F, int C, int i, int j, int di, int dj,
+               int valor, int restantes){
+    if(restantes == 0) return true;                 // CASO BASE: ya hay K
+    if(i < 0 || i >= F || j < 0 || j >= C) return false;   // fuera de la matriz
+    if(M[i][j] != valor) return false;              // se rompe la secuencia
+    return secuencia(M, F, C, i + di, j + dj, di, dj, valor, restantes - 1);
+}
+
+// prueba las 4 direcciones desde (i,j); devuelve la dirección o -1
+int probarDirecciones(int M[][MAXC], int F, int C, int i, int j, int k, int d = 0){
+    if(d == 4) return -1;                           // CASO BASE: ninguna sirve
+    if(secuencia(M, F, C, i, j, DI[d], DJ[d], M[i][j], k)) return d;
+    return probarDirecciones(M, F, C, i, j, k, d + 1);
+}
+
+bool hayConsecutivos(int M[][MAXC], int F, int C, int k, int &fi, int &fj, int &dir,
+                     int i = 0, int j = 0){
+    if(i == F) return false;                        // CASO BASE
+    if(j == C) return hayConsecutivos(M, F, C, k, fi, fj, dir, i + 1, 0);
+    int d = probarDirecciones(M, F, C, i, j, k);
+    if(d != -1){ fi = i; fj = j; dir = d; return true; }
+    return hayConsecutivos(M, F, C, k, fi, fj, dir, i, j + 1);
+}
+
+// 50) Camino de suma máxima (solo derecha o abajo)
+/*
+ Desde (i,j): si llegué al destino, la suma es la celda.
+ Si estoy en la última fila solo puedo ir a la derecha;
+ en la última columna solo hacia abajo; si no, el mejor de los dos.
+*/
+int caminoMax(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    if(i == F - 1 && j == C - 1) return M[i][j];                // CASO BASE: destino
+    if(i == F - 1) return M[i][j] + caminoMax(M, F, C, i, j + 1);  // solo derecha
+    if(j == C - 1) return M[i][j] + caminoMax(M, F, C, i + 1, j);  // solo abajo
+    return M[i][j] + max(caminoMax(M, F, C, i + 1, j),            // abajo
+                         caminoMax(M, F, C, i, j + 1));           // derecha
+}
+
+// Reconstruye el camino eligiendo siempre la dirección con mayor suma
+void mostrarCamino(int M[][MAXC], int F, int C, int i = 0, int j = 0){
+    cout << M[i][j];
+    if(i == F - 1 && j == C - 1) return;                        // CASO BASE
+    cout << " -> ";
+    if(i == F - 1) mostrarCamino(M, F, C, i, j + 1);
+    else if(j == C - 1) mostrarCamino(M, F, C, i + 1, j);
+    else if(caminoMax(M, F, C, i + 1, j) >= caminoMax(M, F, C, i, j + 1))
+        mostrarCamino(M, F, C, i + 1, j);                       // abajo
+    else
+        mostrarCamino(M, F, C, i, j + 1);                       // derecha
+}
+
+void ej26(){
+    cout << "\n=== 26. Cargar una matriz ===\n";
+    int M[MAXF][MAXC], F, C;
+    cout << "F = "; cin >> F;
+    cout << "C = "; cin >> C;
+    cout << "Ingrese " << F * C << " datos por filas: ";
+    cargar(M, F, C);
+    cout << "Matriz cargada:\n";
+    mostrar(M, F, C);
+}
+void ej27(){
+    cout << "\n=== 27. Mostrar una matriz ===\n";
+    int M[MAXF][MAXC] = {{3, 1, 4}, {2, 5, 6}}, F = 2, C = 3;
+    mostrar(M, F, C);
+}
+void ej28(){
+    cout << "\n=== 28. Sumar todos los elementos ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {4, 5, 6}}, F = 2, C = 3;
+    cout << "Suma total: " << suma(M, F, C) << "\n";
+}
+void ej29(){
+    cout << "\n=== 29. Contar pares e impares ===\n";
+    int M[MAXF][MAXC] = {{2, 3, 4}, {5, 6, 7}}, F = 2, C = 3;
+    int pares = 0, impares = 0;
+    contarParImpar(M, F, C, pares, impares);
+    cout << "Pares: " << pares << "; impares: " << impares << "\n";
+}
+void ej30(){
+    cout << "\n=== 30. Encontrar el mayor ===\n";
+    int M[MAXF][MAXC] = {{-5, -1, -9}, {-3, -7, -2}}, F = 2, C = 3;
+    cout << "Mayor: " << mayor(M, F, C) << "\n";
+}
+void ej31(){
+    cout << "\n=== 31. Encontrar el menor ===\n";
+    int M[MAXF][MAXC] = {{5, 2, 8}, {1, 7, 6}, {1, 4, 9}}, F = 3, C = 3;
+    int fm = 0, cm = 0;
+    menor(M, F, C, fm, cm);
+    cout << "Menor: " << M[fm][cm] << "; fila: " << fm << "; columna: " << cm << "\n";
+}
+void ej32(){
+    cout << "\n=== 32. Positivos, negativos y ceros ===\n";
+    int M[MAXF][MAXC] = {{-1, 0, 2, 5}, {0, -3, 4, -2}}, F = 2, C = 4;
+    int pos = 0, neg = 0, ceros = 0;
+    contarSignos(M, F, C, pos, neg, ceros);
+    cout << "Positivos: " << pos << "; negativos: " << neg << "; ceros: " << ceros << "\n";
+}
+void ej33(){
+    cout << "\n=== 33. Buscar un elemento ===\n";
+    int M[MAXF][MAXC] = {{4, 8, 2}, {7, 8, 5}}, F = 2, C = 3, x = 8;
+    int f, c;
+    if(buscar(M, F, C, x, f, c))
+        cout << "Encontrado en fila " << f << ", columna " << c << "\n";
+    else
+        cout << "No encontrado\n";
+}
+void ej34(){
+    cout << "\n=== 34. Sumar cada fila ===\n";
+    int M[MAXF][MAXC] = {{2, 4, 6}, {1, 3, 5}, {7, 8, 9}}, F = 3, C = 3;
+    mostrarSumasFilas(M, F, C);
+}
+void ej35(){
+    cout << "\n=== 35. Sumar cada columna ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {4, 5, 6}}, F = 2, C = 3;
+    mostrarSumasColumnas(M, F, C);
+}
+void ej36(){
+    cout << "\n=== 36. Diagonal principal ===\n";
+    int M[MAXF][MAXC] = {{3, 5, 7}, {2, 8, 4}, {1, 6, 9}}, N = 3;
+    cout << "Suma diagonal principal: " << diagonalPrincipal(M, N) << "\n";
+}
+void ej37(){
+    cout << "\n=== 37. Diagonal secundaria ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, N = 3;
+    cout << "Suma diagonal secundaria: " << diagonalSecundaria(M, N) << "\n";
+}
+void ej38(){
+    cout << "\n=== 38. Encima y debajo de la diagonal ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, N = 3;
+    int encima = 0, debajo = 0;
+    sumaEncimaDebajo(M, N, encima, debajo);
+    cout << "Encima: " << encima << "; debajo: " << debajo << "\n";
+}
+void ej39(){
+    cout << "\n=== 39. Mostrar el borde ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}, F = 3, C = 4;
+    cout << "Borde por filas: ";
+    mostrarBorde(M, F, C);
+    cout << "\n";
+}
+void ej40(){
+    cout << "\n=== 40. Sumar el borde ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, F = 3, C = 3;
+    cout << "Suma del borde: " << sumaBorde(M, F, C) << "\n";
+}
+void ej41(){
+    cout << "\n=== 41. Transpuesta ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {4, 5, 6}}, F = 2, C = 3;
+    cout << "Transpuesta (" << C << "x" << F << "):\n";
+    mostrarTranspuesta(M, F, C);
+}
+void ej42(){
+    cout << "\n=== 42. Mayor de cada fila ===\n";
+    int M[MAXF][MAXC] = {{2, 9, 4}, {8, 1, 5}, {3, 7, 6}}, F = 3, C = 3;
+    mostrarMayoresFilas(M, F, C);
+}
+void ej43(){
+    cout << "\n=== 43. Matriz simetrica ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {2, 4, 5}, {3, 5, 6}}, N = 3;
+    cout << "Es simetrica?: " << (esSimetrica(M, N) ? "Si" : "No") << "\n";
+}
+void ej44(){
+    cout << "\n=== 44. Rotar 90 grados ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, N = 3;
+    cout << "Rotada:\n";
+    mostrarRotada90(M, N);
+}
+void ej45(){
+    cout << "\n=== 45. Recorrido en espiral ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
+    int F = 4, C = 4;
+    espiral(M, 0, F - 1, 0, C - 1);
+    cout << "\n";
+}
+void ej46(){
+    cout << "\n=== 46. Triangular superior ===\n";
+    int M[MAXF][MAXC] = {{2, 3, 4}, {0, 5, 6}, {0, 0, 7}}, N = 3;
+    cout << "Triangular superior?: " << (esTriangularSuperior(M, N) ? "Si" : "No") << "\n";
+}
+void ej47(){
+    cout << "\n=== 47. Regiones triangulares ===\n";
+    int M[MAXF][MAXC] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, N = 3;
+    int sup = 0, inf = 0;
+    sumaTriangulos(M, N, sup, inf);
+    cout << "Triangulo superior: " << sup << "; triangulo inferior: " << inf << "\n";
+}
+void ej48(){
+    cout << "\n=== 48. Punto de silla ===\n";
+    int M[MAXF][MAXC] = {{3, 1}, {4, 2}}, F = 2, C = 2;
+    int encontrados = 0;
+    buscarPuntosSilla(M, F, C, encontrados);
+    if(encontrados == 0) cout << "No hay punto de silla\n";
+}
+void ej49(){
+    cout << "\n=== 49. Secuencias consecutivas ===\n";
+    int M[MAXF][MAXC] = {{5, 1, 2}, {4, 5, 3}, {7, 8, 5}}, F = 3, C = 3, k = 3;
+    int fi, fj, dir;
+    if(hayConsecutivos(M, F, C, k, fi, fj, dir)){
+        cout << "Si existe: " << NOMBRE[dir] << " [";
+        mostrarRepetido(M[fi][fj], k);
+        cout << "]\n";
+    }
+    else cout << "No existe\n";
+}
+void ej50(){
+    cout << "\n=== 50. Camino de suma maxima ===\n";
+    int M[MAXF][MAXC] = {{5, 1, 2}, {4, 8, 3}, {1, 9, 6}}, F = 3, C = 3;
+    cout << "Suma maxima: " << caminoMax(M, F, C) << "; camino: ";
+    mostrarCamino(M, F, C);
+    cout << "\n";
+}
+
+int main(){
+    ej26(); ej27(); ej28(); ej29(); ej30();
+    ej31(); ej32(); ej33(); ej34(); ej35();
+    ej36(); ej37(); ej38(); ej39(); ej40();
+    ej41(); ej42(); ej43(); ej44(); ej45();
+    ej46(); ej47(); ej48(); ej49(); ej50();
+    return 0;
+}
+
+
