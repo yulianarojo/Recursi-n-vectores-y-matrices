@@ -1,0 +1,354 @@
+//  PRÁCTICO · Memoria y punteros
+// BLOQUE I · Fundamentos de punteros
+
+// Ejercicio 01 · 
+// ¿Cuál es la salida del siguiente código?
+//     int x = 8;
+//     int* p = &x;
+//     cout << *p;
+// A) 8   B) Dirección de x   C) 0   D) Error de compilación
+// Respuesta: A) 8
+
+// Ejercicio 02 · 
+// ¿Cuál es la salida del siguiente código?
+//     int x = 5;
+//     int* p = &x;
+//     *p = 12;
+//     cout << x;
+// A) 12   B) 17   C) Error de compilación   D) 5
+// Respuesta: A) 12
+
+// Ejercicio 03 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a = 7;
+//     int* p = &a;
+//     cout << a + *p;
+// A) 7   B) 0   C) Error de compilación   D) 14
+// Respuesta: D) 14
+
+// Ejercicio 04 · 
+// ¿Cuál es la salida del siguiente código?
+//     int x = 3;
+//     int* p = &x;
+//     x++;
+//     cout << *p;
+// A) Dirección de x   B) 5   C) 3   D) 4
+// Respuesta: D) 4
+
+// Ejercicio 05 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a = 10, b = 20;
+//     int* p = &a;
+//     p = &b;
+//     cout << *p;
+// A) Error de compilación   B) 10   C) 20   D) 30
+// Respuesta: C) 20
+
+// Ejercicio 06 · 
+// ¿Cuál es la salida del siguiente código?
+//     int n = 9;
+//     int* p = &n;
+//     cout << (&n == p);
+// A) Error de compilación   B) 0   C) 1   D) 9
+// Respuesta: C) 1
+
+// Ejercicio 07 · 
+// ¿Cuál es la salida del siguiente código?
+//     int x = 6;
+//     int* p = &x;
+//     cout << *p << " " << x;
+// A) 6 12   B) 0 6   C) 6 6   D) 6 0
+// Respuesta: C) 6 6
+
+// Ejercicio 08 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a = 4;
+//     int* p = &a;
+//     *p += 3;
+//     cout << a * 2;
+// A) 7   B) 8   C) 11   D) 14
+// Respuesta: D) 14
+
+// Ejercicio 09 ·
+// ¿Cuál es la salida del siguiente código?
+//     int x = 11;
+//     int* p = &x;
+//     int** pp = &p;
+//     cout << **pp;
+// A) 0   B) Error de compilación   C) 11   D) Dirección de p
+// Respuesta: C) 11
+
+// Ejercicio 10 · 
+// ¿Cuál es la salida del siguiente código?
+//     int x = 2;
+//     int* p = &x;
+//     int** pp = &p;
+//     **pp = 15;
+//     cout << x;
+// A) Error de compilación   B) 15   C) 2   D) 17
+// Respuesta: B) 15
+
+// BLOQUE II · Arreglos unidimensionales y aritmética de punteros
+
+// Ejercicio 11 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[4] = {2,4,6,8};
+//     int* p = a;
+//     cout << *p;
+// A) 2   B) 0   C) 4   D) 8
+// Respuesta: A) 2
+
+// Ejercicio 12 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {3,5,7};
+//     int* p = a;
+//     cout << *(p + 1);
+// A) 5   B) 3   C) 7   D) 1
+// Respuesta: A) 5
+
+// Ejercicio 13 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {1,2,3,4};
+//     int* p = a;
+//     cout << p[2];
+// A) 1   B) 3   C) 4   D) 2
+// Respuesta: B) 3
+
+// Ejercicio 14 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {8,6,4};
+//     int* p = a;
+//     cout << *(p + 2) + *p;
+// A) 14   B) 6   C) 12   D) 10
+// Respuesta: C) 12
+
+// Ejercicio 15 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {10,20,30};
+//     int* p = a;
+//     p++;
+//     cout << *p;
+// A) 11   B) 10   C) 20   D) 30
+// Respuesta: C) 20
+
+// Ejercicio 16 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {2,4,6,8};
+//     int* p = a;
+//     *(p + 1) = 9;
+//     cout << a[1];
+// A) 2   B) 4   C) 9   D) Error de compilación
+// Respuesta: C) 9
+
+// Ejercicio 17 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {1,2,3,4};
+//     int* p = a;
+//     int suma = 0;
+//     for (int i=0; i<4; i++) suma += *(p+i);
+//     cout << suma;
+// A) 6   B) 24   C) 10   D) 4
+// Respuesta: C) 10
+
+// Ejercicio 18 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {5,9,2,7};
+//     int* p = a;
+//     cout << *(p + 3) - *(p + 1);
+// A) -2   B) 16   C) 2   D) -4
+// Respuesta: A) -2
+
+// Ejercicio 19 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {1,3,5,7,9};
+//     int* p = &a[4];
+//     cout << *(p-2);
+// A) 7   B) 9   C) 5   D) 3
+// Respuesta: C) 5
+
+// Ejercicio 20 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {2,4,6,8};
+//     int* p = a;
+//     cout << (p + 3) - p;
+// A) 1   B) 8   C) 12   D) 3
+// Respuesta: D) 3
+
+// Ejercicio 21 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {4,7,1};
+//     int* p = a;
+//     *p = *(p+1) + *(p+2);
+//     cout << a[0];
+// A) 12   B) 7   C) 4   D) 8
+// Respuesta: D) 8
+
+// Ejercicio 22 · 
+// ¿Cuál es la salida del siguiente código?
+//     int a[] = {1,2,3};
+//     int* p = a;
+//     for(int i=0;i<3;i++) *(p+i) *= 2;
+//     cout << a[0] << " " << a[2];
+// A) 2 3   B) 1 3   C) 2 6   D) 3 6
+// Respuesta: C) 2 6
+
+// BLOQUE III · Matrices bidimensionales y punteros a filas
+
+// Ejercicio 23 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[2][3] = {{1,2,3},{4,5,6}};
+//     cout << m[1][2];
+// A) 6   B) 4   C) 3   D) 5
+// Respuesta: A) 6
+
+// Ejercicio 24 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[2][2] = {{2,4},{6,8}};
+//     int (*p)[2] = m;
+//     cout << p[1][0];
+// A) 2   B) 6   C) 8   D) 4
+// Respuesta: B) 6
+
+// Ejercicio 25 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[2][3] = {{1,2,3},{4,5,6}};
+//     int (*p)[3] = m;
+//     cout << *(*(p+1)+1);
+// A) 4   B) 2   C) 6   D) 5
+// Respuesta: D) 5
+
+// Ejercicio 26 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[2][2] = {{1,3},{5,7}};
+//     int (*p)[2] = m;
+//     cout << *(*(p)+1) + *(*(p+1));
+// A) 10   B) 8   C) 6   D) 4
+// Respuesta: B) 8
+
+// Ejercicio 27 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[3][2] = {{1,2},{3,4},{5,6}};
+//     int (*p)[2] = m;
+//     cout << (p+2)[0][1];
+// A) 3   B) 6   C) 5   D) 4
+// Respuesta: B) 6
+
+// Ejercicio 28 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[2][3] = {{1,2,3},{4,5,6}};
+//     int (*p)[3] = m;
+//     p[0][2] = p[1][0] + p[1][1];
+//     cout << m[0][2];
+// A) 7   B) 3   C) 9   D) 11
+// Respuesta: C) 9
+
+// Ejercicio 29 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[2][2] = {{2,3},{4,5}};
+//     int (*p)[2] = m;
+//     int s=0;
+//     for(int i=0;i<2;i++)
+//       for(int j=0;j<2;j++) s += p[i][j];
+//     cout << s;
+// A) 20   B) 12   C) 10   D) 14
+// Respuesta: D) 14
+
+// Ejercicio 30 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+//     int (*p)[3] = m;
+//     cout << p[0][0]+p[1][1]+p[2][2];
+// A) 15   B) 18   C) 12   D) 9
+// Respuesta: A) 15
+
+// Ejercicio 31 · 
+// ¿Cuál es la salida del siguiente código?
+//     int m[2][3] = {{1,2,3},{4,5,6}};
+//     int (*p)[3] = m;
+//     cout << p[0][2]+p[1][2];
+// A) 7   B) 6   C) 12   D) 9
+// Respuesta: D) 9
+
+// Ejercicio 32 ·
+// ¿Cuál es la salida del siguiente código?
+//     int m[2][2] = {{1,2},{3,4}};
+//     int (*p)[2] = m;
+//     for(int i=0;i<2;i++) p[i][i] *= 3;
+//     cout << m[0][0] << " " << m[1][1];
+// A) 1 4   B) 3 12   C) 1 12   D) 3 4
+// Respuesta: B) 3 12
+
+// BLOQUE IV · Memoria dinámica, matrices y funciones
+
+// Ejercicio 33 · 
+// ¿Cuál es la salida del siguiente código?
+//     int* p = new int(25);
+//     cout << *p;
+//     delete p;
+// A) Error de compilación   B) 0   C) Dirección de p   D) 25
+// Respuesta: D) 25
+
+// Ejercicio 34 · 
+// ¿Cuál es la salida del siguiente código?
+//     int* a = new int[3]{3,6,9};
+//     cout << a[1];
+//     delete[] a;
+// A) 9   B) 3   C) 0   D) 6
+// Respuesta: D) 6
+
+// Ejercicio 35 · 
+// ¿Cuál es la salida del siguiente código?
+//     int* a = new int[4]{1,2,3,4};
+//     int* p = a;
+//     cout << *(p+3);
+//     delete[] a;
+// A) 4   B) 0   C) 3   D) 1
+// Respuesta: A) 4
+
+// Ejercicio 36 · 
+// ¿Cuál es la salida del siguiente código?
+//     int n = 3;
+//     int* a = new int[n]{2,4,6};
+//     int s=0;
+//     for(int i=0;i<n;i++) s+=a[i];
+//     cout << s;
+//     delete[] a;
+// A) 24   B) 6   C) 8   D) 12
+// Respuesta: D) 12
+
+// Ejercicio 37 · 
+// ¿Cuál es la salida del siguiente código?
+//     int (*m)[2] = new int[2][2]{{1,2},{3,4}};
+//     cout << m[1][0];
+//     delete[] m;
+// A) 3   B) 2   C) 4   D) 1
+// Respuesta: A) 3
+
+// Ejercicio 38 · 
+// ¿Cuál es la salida del siguiente código?
+//     int (*m)[3] = new int[2][3]{{2,4,6},{1,3,5}};
+//     cout << *(*(m+1)+2);
+//     delete[] m;
+// A) 1   B) 5   C) 3   D) 6
+// Respuesta: B) 5
+
+// Ejercicio 39 · 
+// ¿Cuál es la salida del siguiente código?
+//     void cambiar(int* p) { *p += 5; }
+//     // Dentro de main():
+//     int x=7;
+//     cambiar(&x);
+//     cout << x;
+// A) 12   B) 7   C) 5   D) Error de compilación
+// Respuesta: A) 12
+
+// Ejercicio 40 · 
+// ¿Cuál es la salida del siguiente código?
+//     int sumarFila(int (*m)[3], int fila) {
+//       return m[fila][0]+m[fila][1]+m[fila][2];
+//     }
+//     // Dentro de main():
+//     int m[2][3]={{1,2,3},{4,5,6}};
+//     cout << sumarFila(m,1);
+// A) 15   B) 9   C) 21   D) 6
+// Respuesta: A) 15
